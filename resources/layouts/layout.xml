@@ -1,0 +1,7 @@
+<layout id="WatchFace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <!--<drawable class="Background" />-->
+    <label id="DateLabel" x="12%" y="30%" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_LEFT" color="Graphics.COLOR_GREEN" />
+    <label id="TimeLabel" x="42%" y="35%" font="Graphics.FONT_NUMBER_MEDIUM" justification="Graphics.TEXT_JUSTIFY_RIGHT" color="Graphics.COLOR_GREEN" />
+    <label id="AmPmLabel" x="44%" y="38%" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_LEFT" color="Graphics.COLOR_GREEN" />
+    <label id="SecLabel" x="43.5%" y="42.5%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_LEFT" color="Graphics.COLOR_GREEN" />
+</layout>

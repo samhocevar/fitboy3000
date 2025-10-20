@@ -1,0 +1,12 @@
+<drawables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <bitmap id="LauncherIcon" filename="launcher_icon.svg" dithering="none" />
+
+    <bitmap id="VaultBoy" filename="vaultboytest.png" dithering="floyd_steinberg" scaleX="35%" scaleY="70%" />
+
+    <bitmap id="FootSteps" filename="footsteps.svg" dithering="none" scaleX="6%" scaleRelativeTo="screen" />
+    <bitmap id="HeartRate" filename="heart.svg" dithering="none" scaleX="6%" scaleRelativeTo="screen" />
+    <bitmap id="Battery" filename="battery.svg" dithering="none" scaleX="6%" scaleRelativeTo="screen" />
+    <bitmap id="ECG" filename="ecg.svg" dithering="none" scaleX="6%" scaleRelativeTo="screen" />
+    <bitmap id="Bluetooth" filename="bluetooth.svg" dithering="none" scaleX="6%" scaleRelativeTo="screen" />
+    <bitmap id="Flame" filename="flame.svg" dithering="none" scaleX="5%" scaleY="6%" scaleRelativeTo="screen" />
+</drawables>
