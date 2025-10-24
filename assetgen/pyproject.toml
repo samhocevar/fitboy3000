@@ -1,0 +1,29 @@
+[project]
+name = "assetgen"
+version = "0.0.0"
+description = "Generate Fit-Boy 3000 assets"
+authors = [
+    { name = "Sam Hocevar", email = "sam@hocevar.net" }
+]
+license = { text = "WTFPL" }
+readme = "README.md"
+requires-python = ">=3.13"
+
+dependencies = [
+    # Parse Steam .vdf files to locate games
+    "vdf",
+    # Open .BA2 files; we require this fork because of a parsing bug
+    "bethesda-structs @ git+https://github.com/samhocevar-forks/bethesda-structs@samfork",
+    # Dependency of pyswf. For now we require this fork until build is fixed
+    # See https://github.com/fancycode/pylzma/pull/87
+    "pylzma @ git+https://github.com/samhocevar-forks/pylzma@samfork",
+    # Convert SWF to SVG; we require this fork because Python3 support is not
+    # complete and no PyPI release was made lately
+    "pyswf @ git+https://github.com/samhocevar-forks/pyswf@python3-support",
+    # SVG rendering to image surfaces
+    "skia-python",
+]
+
+[build-system]
+requires = [ "poetry-core>=2.0.0,<3.0.0" ]
+build-backend = "poetry.core.masonry.api"
