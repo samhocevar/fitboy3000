@@ -25,6 +25,7 @@ class FitBoyView extends WatchUi.WatchFace
         _totalCals = activityInfo != null ? activityInfo.calories : 0;
 
         // Get heart rate if available
+        //_heartRate = Activity.Info.currentHeartRate;
         var hrData = ActivityMonitor.getHeartRateHistory(1, true).next();
         _heartRate = hrData != null && hrData.heartRate != 255 ? hrData.heartRate : -1;
 
@@ -43,6 +44,7 @@ class FitBoyView extends WatchUi.WatchFace
     // the state of this View and prepare it to be shown. This includes
     // loading resources into memory.
     var _heartSprite, _stepSprite, _ecgSprite, _batterySprite, _bluetoothSprite, _flameSprite;
+    var _font;
 
     function onShow() as Void
     {
@@ -52,6 +54,12 @@ class FitBoyView extends WatchUi.WatchFace
         _batterySprite = new WatchUi.Bitmap({:rezId => Rez.Drawables.Battery});
         _bluetoothSprite = new WatchUi.Bitmap({:rezId => Rez.Drawables.Bluetooth});
         _flameSprite = new WatchUi.Bitmap({:rezId => Rez.Drawables.Flame});
+        _font = WatchUi.loadResource(Rez.Fonts.FitBoy3000);
+    }
+
+    function onAnimationEvent(event as AnimationEvent, options as Dictionary) as Void
+    {
+
     }
 
     // Update the view
@@ -59,31 +67,37 @@ class FitBoyView extends WatchUi.WatchFace
     {
         UpdateData();
 
+        // Retrieve settings
+        var is12hour = !System.getDeviceSettings().is24Hour;
+        var isMilitary = Application.Properties.getValue("UseMilitaryFormat");
+
+        var fgColor = Application.Properties.getValue("ThemeColor") as Number;
+        var dimColor = (fgColor >> 2) & 0x3f3f3f;
+
         // Get the current time and format it correctly
         var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-
-        var timeString = Application.Properties.getValue("UseMilitaryFormat") ? now.hour.format("%02d")
-                       : System.getDeviceSettings().is24Hour ? now.hour + ":"
-                       : (now.hour + 11) % 12 + 1 + ":";
+        var timeString = is12hour ? (now.hour + 11) % 12 + 1 + ":"
+                       : isMilitary ? now.hour.format("%02d")
+                       : now.hour + ":";
         timeString += now.min.format("%02d");
 
         // Update the view
         var view = View.findDrawableById("TimeLabel") as Text;
-        view.setColor(Application.Properties.getValue("ForegroundColor") as Number);
+        view.setColor(fgColor);
         view.setText(timeString);
 
         view = View.findDrawableById("AmPmLabel") as Text;
-        view.setColor(Application.Properties.getValue("ForegroundColor") as Number);
-        view.setText(System.getDeviceSettings().is24Hour ? "" : now.hour >= 12 ? "PM" : "AM");
+        view.setColor(fgColor);
+        view.setText(is12hour ? now.hour >= 12 ? "PM" : "AM": "");
 
         // Update the seconds view
         view = View.findDrawableById("SecLabel") as Text;
-        view.setColor(Application.Properties.getValue("ForegroundColor") as Number);
+        view.setColor(fgColor);
         view.setText(now.sec.format("%02d"));
 
         // Update the date view
         view = View.findDrawableById("DateLabel") as Text;
-        view.setColor(Application.Properties.getValue("ForegroundColor") as Number);
+        view.setColor(fgColor);
         view.setText(Lang.format("$1$, $3$ $2$", [now.day_of_week, now.day, now.month]));
 
         // Call the parent onUpdate function to redraw the layout
@@ -104,11 +118,13 @@ class FitBoyView extends WatchUi.WatchFace
             dc.drawLine(0, i, w, i);
         }
 */
-        dc.setColor(0x003300, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(dimColor, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, h * 0.08, w * 0.46, h * 0.08);
         dc.fillRectangle(w * 0.47, h * 0.08, w, h * 0.08);
+        //dc.setColor(0x000088, Graphics.COLOR_TRANSPARENT);
+        //dc.fillRectangle(w * 0.75, 0, w, h);
 
-        dc.setColor(Application.Properties.getValue("ForegroundColor"), Graphics.COLOR_TRANSPARENT);
+        dc.setColor(fgColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w * 0.50, h * 0.08, Graphics.FONT_XTINY, Lang.format("HP $1$/100", [_bodyBattery]), Graphics.TEXT_JUSTIFY_LEFT);
         dc.drawText(w * 0.43, h * 0.08, Graphics.FONT_XTINY, Lang.format("LVL $1$", [_totalFloors]), Graphics.TEXT_JUSTIFY_RIGHT);
 
@@ -147,9 +163,15 @@ class FitBoyView extends WatchUi.WatchFace
         _bluetoothSprite.setLocation(bat_x + w * 0.18, bat_y - h * 0.015);
         _bluetoothSprite.draw(dc);
 
-        new WatchUi.Bitmap({:rezId => Rez.Drawables.VaultBoy, :locX => w * 0.55, :locY => h * 0.18}).draw(dc);
+        //new WatchUi.Bitmap({:rezId => Rez.Drawables.VaultBoy, :locX => w * 0.55, :locY => h * 0.18}).draw(dc);
 
+        //dc.drawCircle(w * 0.5, h * 0.5, Math.sin(toto * 0.2) * 30 + 40);
         //dc.drawCircle(w / 2, h / 2, w / 2 - 1);
+        dc.drawText(w * 0.53, h * 0.38, _font, toto % 8, Graphics.TEXT_JUSTIFY_LEFT);
+        var dx = [ -16, -17, -18, -18, -19, -18, -18, -18 ];
+        var dy = [ -23, -26, -28, -26, -23, -25, -28, -27 ];
+        var head = _bodyBattery > 66 ? "a" : _bodyBattery > 33 ? "b" : "c";
+        dc.drawText(w * 0.53 + 37 + dx[toto % 8], h * 0.38 - 23 + dy[toto % 8], _font, head, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     // Called when this View is removed from the screen. Save the
@@ -164,13 +186,31 @@ class FitBoyView extends WatchUi.WatchFace
         _bluetoothSprite = null;
     }
 
+    var _timer = null;
+    var toto = 0;
+
+    function _timerCallback() as Void
+    {
+        toto += 1;
+        WatchUi.requestUpdate();
+    }
+
     // The user has just looked at their watch. Timers and animations may be started here.
     function onExitSleep() as Void
     {
+        toto = 0;
+        _timer = new Toybox.Timer.Timer();
+        _timer.start(method(:_timerCallback), 200, true);
     }
 
     // Terminate any active timers and prepare for slow updates.
     function onEnterSleep() as Void
     {
+        if (_timer != null)
+        {
+            _timer.stop();
+            _timer = null;
+            toto = 0;
+        }
     }
 }

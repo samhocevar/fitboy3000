@@ -1,11 +1,12 @@
 <settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
 
-    <setting propertyKey="@Properties.ForegroundColor" title="@Strings.ForegroundColorTitle">
+    <setting propertyKey="@Properties.ThemeColor" title="@Strings.ThemeColorTitle">
         <settingConfig type="list">
-            <listEntry value="0x0000FF">@Strings.ColorBlue</listEntry>
-            <listEntry value="0xFF0000">@Strings.ColorRed</listEntry>
-            <listEntry value="0x00FF00">@Strings.ColorGreen</listEntry>
-            <listEntry value="0xFFFFFF">@Strings.ColorWhite</listEntry>
+            <!-- Taken from NV ini settings, see https://www.reddit.com/r/Fallout/comments/40hpkr/comment/cyusw4w/ -->
+            <listEntry value="0x1aff80">@Strings.ColorGreen</listEntry>
+            <listEntry value="0xffb642">@Strings.ColorAmber</listEntry>
+            <listEntry value="0x2ecfff">@Strings.ColorBlue</listEntry>
+            <listEntry value="0xc0ffff">@Strings.ColorWhite</listEntry>
         </settingConfig>
     </setting>
 
